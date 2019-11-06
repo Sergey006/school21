@@ -1,0 +1,14 @@
+ONE CALL to function ALWAYS RETURNS FULL LINE WITHOUT ‘\n’
+
+Order:
+
+Receive text from read() into array.
+
+If we don’t have ‘\n’ in a text:
+	read again and add new letters from read
+	continue read the file.
+
+Go through array and searching for ‘\n’ symbol:
+	1.if found ‘\n’ then stop, copy text before ‘\n’ in additional malloced array, point **line to this array.
+	2.We have rest of line after ‘\n’
+
