@@ -6,7 +6,7 @@
 /*   By: bstanton <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/22 18:56:09 by bstanton          #+#    #+#             */
-/*   Updated: 2019/11/25 22:13:33 by bstanton         ###   ########.fr       */
+/*   Updated: 2019/11/26 21:47:59 by bstanton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,24 +15,41 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "libft.h"
 
 int	get_next_line(const int fd, char **line)
 {
-	static 			*char;
 	char			buf[BUFF_SIZE + 1];
 	int				alreadyRead;
-	char			*s;
-	
+	char			*place;
+	static char		*save;
+
 	if (fd < 0 || line == NULL)
 		return (-1);
-	while ((alreadyRead = read(fd, buf, BUFF_SIZE))
+	if (*line == NULL)
+		*line = ft_strnew(1);
+	while ((alreadyRead = read(fd, buf, BUFF_SIZE)))
 	{
 		buf[alreadyRead] = '\0';
-		if (
+		if ((place = ft_strchr(buf, '\n')))
+		{
+			*place = '\0';
+			*line = ft_strjoin(*line, buf);
+			place++;
+			if (*place)
+			{
+				if (save == NULL)
+					save = ft_strnew(1);
+				save = ft_strjoin(save, place);
+				printf("\n\n%s\n\n%s\n", save, *line);
+			}
+		}
+		if (save != NULL)
+		{
+			if ((ft_strchr(save, 
+		}
+		*line = ft_strjoin(*line, buf);
 	}
-	if (alreadyRead < 0 || alreadyRead == 0)
-		return (alreadyRead);
-	*line = s;
 	return (alreadyRead);
 }
 
@@ -40,11 +57,13 @@ int	get_next_line(const int fd, char **line)
 int main()
 {
 	int		fd;
-	int		result;
+	char 	*line;
 
 	fd = open("test", O_RDONLY);
-	printf("fd value is [%d]\n", fd);
-	/*result = get_next_line(fd, ptr);
-	printf("%d", result);*/
+	printf("fd value is %d\n", fd);
+	get_next_line(fd, &line);
+	printf("%s\n", line);
+	get_next_line(fd, &line);
+	printf("%s\n", line);
 	return (0);
 }
